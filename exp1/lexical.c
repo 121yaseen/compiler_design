@@ -21,7 +21,7 @@ int iskeyword(char buff[10]){
 	return 0;
 }
 
-int isop(char *buff){
+int isop(char *buff, int linenumber){
 	char aops[][2]={"+","-","*","/","%"},
 	     relops[][3]={"==","!=","<=",">=",">","<"},
 	     logops[][3]={"&&","||","!"},
@@ -29,25 +29,25 @@ int isop(char *buff){
 	int i;
 	for(i=0;i<6;i++){
 		if(strcmp(relops[i],buff) == 0){
-			printf("%s\trelop\n",buff);
+			printf("%s\t\trelop\t\tLine No. : %d\n",buff, linenumber);
 			return 1;
 		}
 	}
 	for(i=0;i<3;i++){
 		if(strcmp(logops[i],buff) == 0){
-			printf("%s\tlogop\n",buff);
+			printf("%s\t\tlogop\t\tLine No. : %d\n",buff, linenumber);
 			return 1;
 		}
 	}
 	for(i=0;i<6;i++){
 		if(strcmp(asgops[i],buff) == 0){
-			printf("%s\tasgop\n",buff);
+			printf("%s\t\tasgop\t\tLine No. : %d\n",buff, linenumber);
 			return 1;
 		}
 	}
 	for(i=0;i<5;i++){
 		if(strcmp(aops[i],buff) == 0){
-			printf("%s\tarthop\n",buff);
+			printf("%s\t\tarthop\t\tLine No. : %d\n",buff, linenumber);
 			return 1;
 		}
 	}
@@ -83,7 +83,9 @@ void main(){
 	FILE *fp=fopen("code.c","r");
 	char *line = NULL,buff[10],*tok;
 	int status,count=0;
+	int linenumber = 0;
 	while(readLine(&line,fp)){
+		linenumber ++;
 		line = strtok(line,";");
 		if(line != NULL){
 			if(startsWith("/*",line)){ //Skip multiline comments
@@ -92,12 +94,12 @@ void main(){
 				tok = strtok(line," ");
 				while(tok != NULL){
 					if(iskeyword(tok)){
-						printf("%s\tkeyword\n",tok);
+						printf("%s\t\tkeyword\t\tLine No. : %d\n",tok, linenumber);
 						count++;
 					}else if(isdigit(tok[0])){
-						printf("%s\tnumber\n",tok);
+						printf("%s\t\tnumber\t\tLine No. : %d\n",tok, linenumber);
 						count++;
-					}else if(isop(tok)){
+					}else if(isop(tok, linenumber)){
 						count++;
 					}else if(startsWith("\"",tok)){
 						char string[1024];
@@ -111,10 +113,10 @@ void main(){
 								}else break;
 							}while(!endsWith("\"",tok));
 						}
-						printf("%s\tliteral\n",string);
+						printf("%s\t\tliteral\t\tLine No. : %d\n",string, linenumber);
 						count++;
 					}else if(isalpha(tok[0])){
-						printf("%s\tidentifier\n",tok);
+						printf("%s\t\tidentifier\tLine No. : %d\n",tok, linenumber);
 						count++;
 					}
 					tok = strtok(0," ");
