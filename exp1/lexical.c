@@ -2,11 +2,10 @@
 #include <ctype.h>
 #include <string.h>
 int iskeyword(char buff[10]){
-	char keywords[32][10] =  {"auto","break","case","char","const","continue","default",
-							  "do","double","else","enum","extern","float","for","goto",
-							  "if","int","long","register","return","short","signed",
-							  "sizeof","static","struct","switch","typedef","union",
-							  "unsigned","void","volatile","while"};
+	char keywords[32][10] =  {"auto","break","case","char","const","continue","default","do","double",
+							  "else","enum","extern","float","for","goto","if","int","long","register",
+							  "return","short","signed","sizeof","static","struct","switch","typedef",
+							  "union","unsigned","void","volatile","while"};
 	int i,j,flag;
 	for(i=0;i<32;i++){
 		j=0;
@@ -70,9 +69,9 @@ int readLine(char **line,FILE *fp){
 	size_t size = 1024;
 	status = (read = getline(line,&size,fp));
 	if (status != EOF){
-		if ((*line)[read - 1] == '\n') (*line)[read - 1] = '\0'; // Trim new line character
+		if ((*line)[read - 1] == '\n') (*line)[read - 1] = '\0';
 		char *ptr = NULL;
-		for(ptr = *line; *ptr == ' ' || *ptr == '\t'; ptr++) ; // Trim initial space and tabs
+		for(ptr = *line; *ptr == ' ' || *ptr == '\t'; ptr++) ;
 		strcpy(*line, ptr);
 		return 1;
 	}
@@ -80,6 +79,7 @@ int readLine(char **line,FILE *fp){
 }
 
 void main(){
+	printf("relop : Relational Operator\tlogop : Logical Operator\tasgop : Assignment Operator\tarthop : Arithmetic Operator\n\n");
 	FILE *fp=fopen("code.c","r");
 	char *line = NULL,buff[10],*tok;
 	int status,count=0;
@@ -88,9 +88,9 @@ void main(){
 		linenumber ++;
 		line = strtok(line,";");
 		if(line != NULL){
-			if(startsWith("/*",line)){ //Skip multiline comments
+			if(startsWith("/*",line)){
 				while(readLine(&line,fp) && !endsWith("*/",line));
-			}else if (!(startsWith("//",line) || startsWith("#",line))){ //Skip single line comments & preprocessor driectives
+			}else if (!(startsWith("//",line) || startsWith("#",line))){
 				tok = strtok(line," ");
 				while(tok != NULL){
 					if(iskeyword(tok)){
@@ -104,7 +104,7 @@ void main(){
 					}else if(startsWith("\"",tok)){
 						char string[1024];
 						strcpy(string,tok);
-						if(!endsWith("\"",tok)){ //if same word doesn't end with quotes, copy all words till end quote
+						if(!endsWith("\"",tok)){ 
 							do{
 								tok = strtok(0," ");
 								if(tok != NULL){
